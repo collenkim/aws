@@ -1,9 +1,10 @@
 # aws
-aws example source
+aws v2 example source
+	- v2로 라이브러리가 변경되면서 사용 메소드 들이 많이 변경됨)
 
 ses 
-  - 이메일 발송
-  - 할당량 체크 및 리즌 교체 (여러 리즌 사용시)
+  - 이메일 발송 
+  - 일일 할당량 정보 조회
 
 sqs
   - sqs 데이터 전송
