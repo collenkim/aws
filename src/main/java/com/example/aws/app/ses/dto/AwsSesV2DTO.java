@@ -2,7 +2,6 @@ package com.example.aws.app.ses.dto;
 
 import java.util.List;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
