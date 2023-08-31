@@ -8,7 +8,6 @@ import com.example.aws.app.ses.service.AwsSesV2Service;
 import com.example.aws.exception.SendFailException;
 import jakarta.annotation.Resource;
 import jakarta.mail.internet.InternetAddress;
-import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.Body;
 import software.amazon.awssdk.services.sesv2.model.Content;
@@ -18,6 +17,7 @@ import software.amazon.awssdk.services.sesv2.model.GetAccountRequest;
 import software.amazon.awssdk.services.sesv2.model.GetAccountResponse;
 import software.amazon.awssdk.services.sesv2.model.Message;
 import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
+import software.amazon.awssdk.services.sesv2.model.SendEmailResponse;
 import software.amazon.awssdk.services.sesv2.model.SendQuota;
 import software.amazon.awssdk.services.sesv2.model.SesV2Exception;
 
@@ -25,10 +25,9 @@ import software.amazon.awssdk.services.sesv2.model.SesV2Exception;
  * Aws Ses V2 기능 사용을 위한 서비스
  */
 @Service
-@RequiredArgsConstructor
 public class AwsSesV2ServiceImpl implements AwsSesV2Service {
 
-  @Resource
+  @Resource(name = "sesV2ClientApNortheast2")
   private SesV2Client sesV2ClientApNortheast2;
 
   /**
@@ -67,7 +66,12 @@ public class AwsSesV2ServiceImpl implements AwsSesV2Service {
                   reqSendEmail.getSenderNm()).toString())
               .destination(destination).content(emailContent).build();
 
-      sesV2ClientApNortheast2.sendEmail(request);
+      SendEmailResponse sendEmailResponse = sesV2ClientApNortheast2.sendEmail(request);
+
+      String successMsg =
+          String.format("aws ses success messageId : %s", sendEmailResponse.messageId());
+
+      System.out.println(successMsg);
 
     } catch (UnsupportedEncodingException uee) {
 
