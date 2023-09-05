@@ -11,10 +11,13 @@ import jakarta.mail.internet.InternetAddress;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.Body;
 import software.amazon.awssdk.services.sesv2.model.Content;
+import software.amazon.awssdk.services.sesv2.model.DeleteSuppressedDestinationRequest;
 import software.amazon.awssdk.services.sesv2.model.Destination;
 import software.amazon.awssdk.services.sesv2.model.EmailContent;
 import software.amazon.awssdk.services.sesv2.model.GetAccountRequest;
 import software.amazon.awssdk.services.sesv2.model.GetAccountResponse;
+import software.amazon.awssdk.services.sesv2.model.GetSuppressedDestinationRequest;
+import software.amazon.awssdk.services.sesv2.model.GetSuppressedDestinationResponse;
 import software.amazon.awssdk.services.sesv2.model.Message;
 import software.amazon.awssdk.services.sesv2.model.SendEmailRequest;
 import software.amazon.awssdk.services.sesv2.model.SendEmailResponse;
@@ -130,6 +133,39 @@ public class AwsSesV2ServiceImpl implements AwsSesV2Service {
 
     SendQuota sendQuota = getAccountResponse.sendQuota();
     return sendQuota;
+  }
+
+  /**
+   * AWS SES 금지 목록에 이메일이 포함되어 있는지 여부 체크
+   * 
+   * @param sesV2Client
+   * @param emailAddress
+   * @return
+   */
+  @Override
+  public boolean isValidAwsSesSuppressedEmailAddress(SesV2Client sesV2Client, String emailAddress) {
+
+    GetSuppressedDestinationRequest getSuppressedDestinationRequest =
+        GetSuppressedDestinationRequest.builder().emailAddress(emailAddress).build();
+    GetSuppressedDestinationResponse getSuppressedDestinationResponse =
+        sesV2Client.getSuppressedDestination(getSuppressedDestinationRequest);
+
+    return getSuppressedDestinationResponse.suppressedDestination().emailAddress()
+        .equals(emailAddress);
+  }
+
+  /**
+   * AWS SES 금지 목록에서 이메일 주소 제거
+   * 
+   * @param sesV2Client
+   * @param emailAddress
+   */
+  @Override
+  public void deleteAwsSesSuppressedEmailAddress(SesV2Client sesV2Client, String emailAddress) {
+
+    DeleteSuppressedDestinationRequest deleteSuppressedDestinationRequest =
+        DeleteSuppressedDestinationRequest.builder().emailAddress(emailAddress).build();
+    sesV2Client.deleteSuppressedDestination(deleteSuppressedDestinationRequest);
   }
 
 }

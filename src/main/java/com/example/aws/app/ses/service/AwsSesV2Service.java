@@ -23,4 +23,21 @@ public interface AwsSesV2Service {
    * @return
    */
   SendQuota getAwsSendQuotaBySesV2Client(SesV2Client sesV2Client);
+  
+  /**
+   * AWS SES 금지 목록에 이메일이 포함되어 있는지 여부 체크
+   * 
+   * @param sesV2Client
+   * @param emailAddress
+   * @return
+   */
+  boolean isValidAwsSesSuppressedEmailAddress(SesV2Client sesV2Client, String emailAddress);
+  
+  /**
+   * AWS SES 금지 목록에서 이메일 주소 제거
+   * 
+   * @param sesV2Client
+   * @param emailAddress
+   */
+  void deleteAwsSesSuppressedEmailAddress(SesV2Client sesV2Client, String emailAddress);
 }
